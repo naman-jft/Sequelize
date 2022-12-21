@@ -26,4 +26,9 @@ export class DataController {
     Update(@Param('id') id: string, @Body() updateData : CreateData ) : Promise<User> {
         return this.dataService.Update(+id,updateData)
     }
+
+    @Post('/jwt')
+    jwt(@Body('name') name: string) {
+        return this.dataService.jwt(name);
+    }
 }

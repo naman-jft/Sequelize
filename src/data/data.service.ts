@@ -1,15 +1,19 @@
 import { Body, Inject, Injectable } from '@nestjs/common';
 import { CreateData } from './dto/create.dto';
 import { User } from './user.entity';
-
+import { JwtService } from '@nestjs/jwt'
 
 
 @Injectable()
 export class DataService {
+    
     constructor(
         @Inject('USER_REPOSITORY')
-        private UserRepository: typeof User
+        private UserRepository: typeof User,
+        private jwtService: JwtService
     ) { }
+
+    
 
 
     findAll(): Promise<User[]> {
@@ -32,13 +36,20 @@ export class DataService {
     }
 
 
-    async Update(id: number, @Body() CreateData: CreateData): Promise<User>{
+    async Update(id: number, @Body() CreateData: CreateData): Promise<User> {
 
         const obj1 = await this.UserRepository.findByPk(id);
         console.log(CreateData);
-        
+
         await obj1?.update(CreateData);
         return
 
+    }
+
+    jwt(name: string) {
+        const payload = { name }
+        return {
+            access_token: this.jwtService.sign(payload),
+        }
     }
 }
